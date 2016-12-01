@@ -13,7 +13,6 @@ SBHEIGHT = 50
 
 
 ThorImg = pygame.image.load('Thor.png') # loading all the game images. :)
-BallImg = pygame.image.load('ball.png')
 Stu1Img = pygame.image.load('student1.png')
 Stu2Img = pygame.image.load('student2.png')
 Stu3Img = pygame.image.load('student3.png')
@@ -42,33 +41,11 @@ class THOR (pygame.sprite.Sprite): #player
             pos = pygame.mouse.get_pos()
             x = pos[0]
             y = pos[1]
-            if y > SCREEN_HEIGHT//2:
-                self.rect.x = x
-                self.rect.y = y
-                self.blindrect.x = self.rect.x
-                self.blindrect.y = self.rect.y
+            self.rect.x = x
+            self.rect.y = y
+            self.blindrect.x = self.rect.x
+            self.blindrect.y = self.rect.y
 
-class BALL:
-        def __init__(self, screen, x, y):
-                self.screen = screen
-                self.rect = pygame.Rect(0,0,0,0)
-                self.image = BallImg
-                self.rect.size = self.image.get_size()
-                self.rect.center = (x, y)
-                self.speed_x = 15
-                self.speed_y = 15
-                
-        def draw(self):
-                self.screen.blit(self.image,(self.rect.x,self.rect.y))
-
-        def move(self):
-                self.rect.x += self.speed_x
-                self.rect.y += self.speed_y
-
-                if self.rect.left < 0 or self.rect.right > self.screen.get_size()[0]:
-                    self.speed_x = -self.speed_x
-                if self.rect.top < 0 or self.rect.bottom > self.screen.get_size()[1]:
-                    self.speed_y = -self.speed_y
 """
 
 class STUDENT: # enemies
@@ -90,6 +67,11 @@ while True: #this is the main game loop
     allSprites.update()
     allSprites.draw(DISPLAYSURF)
     pygame.display.update ((Thor.rect, Thor.blindrect))
+    DISPLAYSURF.blit(Stu1Img, [0, 0])# Need to address repeating code.
+    DISPLAYSURF.blit(Stu2Img, [100, 0])
+    DISPLAYSURF.blit(Stu3Img, [200, 0])
+    DISPLAYSURF.blit(Stu4Img, [300, 0])
+    DISPLAYSURF.blit(Stu5Img, [400, 0])
     pygame.display.flip()
     pygame.display.update()
 
