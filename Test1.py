@@ -1,29 +1,27 @@
 import pygame, sys
 from pygame.locals import *
-import random
+from random import randint
 
 pygame.init()
 SCREEN_HEIGHT = 500
 SCREEN_WIDTH = 500
 FRAME_RATE = 30
 BG_COLOUR = (255, 255, 255)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+ENEMY_VELOCITY = 1
 
 SBWIDTH = 60
 SBHEIGHT = 50
 
 
 ThorImg = pygame.image.load('Thor.png') # loading all the game images. :)
-BallImg = pygame.image.load('ball.png')
 Stu1Img = pygame.image.load('student1.png')
 Stu2Img = pygame.image.load('student2.png')
 Stu3Img = pygame.image.load('student3.png')
 Stu4Img = pygame.image.load('student4.png')
 Stu5Img = pygame.image.load('student5.png')
-Stu6Img = pygame.image.load('student6.png')
-Stu7Img = pygame.image.load('student7.png')
-Stu8Img = pygame.image.load('student8.png')
-Stu9Img = pygame.image.load('student9.png')
-Stu10Img = pygame.image.load('student10.png')
+
 
 DISPLAYSURF = pygame.display.set_mode([SCREEN_WIDTH,SCREEN_HEIGHT])
 pygame.display.set_caption('GAME NAME HERE PLZ')
@@ -42,41 +40,51 @@ class THOR (pygame.sprite.Sprite): #player
             pos = pygame.mouse.get_pos()
             x = pos[0]
             y = pos[1]
-            if y > SCREEN_HEIGHT//2:
-                self.rect.x = x
-                self.rect.y = y
-                self.blindrect.x = self.rect.x
-                self.blindrect.y = self.rect.y
+            self.rect.x = x
+            self.rect.y = y
+            self.blindrect.x = self.rect.x
+            self.blindrect.y = self.rect.y
 
-class BALL:
-        def __init__(self, screen, x, y):
-                self.screen = screen
-                self.rect = pygame.Rect(0,0,0,0)
-                self.image = BallImg
-                self.rect.size = self.image.get_size()
-                self.rect.center = (x, y)
-                self.speed_x = 15
-                self.speed_y = 15
-                
-        def draw(self):
-                self.screen.blit(self.image,(self.rect.x,self.rect.y))
 
-        def move(self):
-                self.rect.x += self.speed_x
-                self.rect.y += self.speed_y
+# A class for enemies that also extends Sprite in a slightly different way
+class Enemy(pygame.sprite.Sprite):
 
-                if self.rect.left < 0 or self.rect.right > self.screen.get_size()[0]:
-                    self.speed_x = -self.speed_x
-                if self.rect.top < 0 or self.rect.bottom > self.screen.get_size()[1]:
-                    self.speed_y = -self.speed_y
+    dx = 0;
+    dy = ENEMY_VELOCITY;
+    
+    # initialization
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([10, 10])
+        self.type = randint(1,10)
+        self.rect = self.image.get_rect()
+        self.rect.x =  randint(100, 500)
+        self.rect.y =-15
+        if self.type // 2:
+                self.image.fill(RED)
+        else:
+                self.image.fill(BLUE)
+    
+    # update this sprite's position
+    def update(self):
+        self.rect.x += self.dx;
+        self.rect.y += self.dy;
+        
+        # if it goes off the screen, start over at the top
+        if self.rect.y > 400:
+            self.rect.x =  randint(100, 500)
+            self.rect.y =-15
+        
 """
 
 class STUDENT: # enemies
 class CODE: # the projectiles shot by the students
 """
+allSprites = pygame.sprite.Group()
 Thor = THOR()
-
-allSprites = pygame.sprite.Group(Thor)
+enemy = Enemy()
+allSprites.add(enemy)
+allSprites.add(Thor)
 
 
 while True: #this is the main game loop
@@ -90,6 +98,10 @@ while True: #this is the main game loop
     allSprites.update()
     allSprites.draw(DISPLAYSURF)
     pygame.display.update ((Thor.rect, Thor.blindrect))
-    pygame.display.flip()
+    DISPLAYSURF.blit(Stu1Img, [0, 0])# Need to address repeating code.
+    DISPLAYSURF.blit(Stu2Img, [100, 0])
+    DISPLAYSURF.blit(Stu3Img, [200, 0])
+    DISPLAYSURF.blit(Stu4Img, [300, 0])
+    DISPLAYSURF.blit(Stu5Img, [400, 0])
     pygame.display.update()
 
